@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#5046E5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Social Post Generator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --bg: #F4F4F8; --card: #fff; --text: #1A1A2E; --muted: #6B7280;
+      --border: #E5E7EB; --primary: #5046E5; --primary-dark: #3D35C9;
+      --success: #10B981; --danger: #DC2626;
+      --ig: #E1306C; --x: #000; --li: #0A66C2; --tt: #EE1D52;
+      --radius: 14px; --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+    body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg); color: var(--text); min-height: 100vh;
+      -webkit-font-smoothing: antialiased; }
+
+    /* screens */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* header */
+    header { background: var(--primary); color: #fff; padding: 20px 16px 18px; text-align: center; }
+    header h1 { font-size: 1.25rem; font-weight: 700; }
+    header p  { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+    .header-row { display: flex; align-items: center; justify-content: center; gap: 10px; }
+    .btn-settings { background: rgba(255,255,255,0.2); border: none; color: #fff;
+      border-radius: 8px; padding: 6px 10px; font-size: 1rem; cursor: pointer; }
+
+    /* layout */
+    main { max-width: 640px; margin: 0 auto; padding: 20px 16px 48px; }
+
+    /* card */
+    .card { background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding: 20px; margin-bottom: 20px; }
+    .card h2 { font-size: 1rem; font-weight: 700; margin-bottom: 4px; }
+    .card .subtitle { font-size: 0.85rem; color: var(--muted); margin-bottom: 16px; }
+
+    /* inputs */
+    label { display: block; font-weight: 600; font-size: 0.9rem; margin-bottom: 8px; }
+    input[type="password"], input[type="text"], textarea {
+      width: 100%; padding: 12px 14px; border: 1.5px solid var(--border);
+      border-radius: 10px; font-size: 1rem; font-family: inherit;
+      color: var(--text); background: #FAFAFA; outline: none;
+      transition: border-color 0.2s; }
+    input:focus, textarea:focus { border-color: var(--primary); background: #fff; }
+    input::placeholder, textarea::placeholder { color: #9CA3AF; }
+    textarea { resize: none; line-height: 1.5; }
+
+    /* chips */
+    .chips-label { font-size: 0.8rem; font-weight: 600; color: var(--muted);
+      text-transform: uppercase; letter-spacing: 0.5px; margin: 14px 0 8px; }
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; }
+    .chip { background: #F0F0FF; color: var(--primary); border: 1.5px solid #DDD8FF;
+      border-radius: 20px; padding: 6px 12px; font-size: 0.78rem; font-weight: 500;
+      cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+    .chip:active, .chip.active { background: var(--primary); color: #fff; border-color: var(--primary); }
+
+    /* buttons */
+    .btn { display: block; width: 100%; padding: 15px; border: none; border-radius: 12px;
+      font-size: 1rem; font-weight: 700; cursor: pointer; transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent; text-align: center; }
+    .btn-primary { background: var(--primary); color: #fff; margin-top: 18px; }
+    .btn-primary:active { background: var(--primary-dark); transform: scale(0.98); }
+    .btn-primary:disabled { background: #A5A0F0; cursor: not-allowed; transform: none; }
+    .btn-outline { background: none; color: var(--text); border: 1.5px solid var(--border);
+      margin-top: 10px; }
+    .btn-outline:active { background: var(--bg); }
+
+    /* loading */
+    .loading { text-align: center; padding: 48px 20px; }
+    .spinner { width: 42px; height: 42px; border: 4px solid #DDD8FF;
+      border-top-color: var(--primary); border-radius: 50%;
+      animation: spin 0.8s linear infinite; margin: 0 auto 14px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: var(--muted); font-size: 0.9rem; }
+    .progress-text { font-size: 0.78rem; color: #A0A0B0; margin-top: 6px; min-height: 18px; }
+
+    /* platform cards */
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; }
+    .results-header h2 { font-size: 1rem; font-weight: 700; }
+    .btn-new { background: none; border: 1.5px solid var(--border); border-radius: 8px;
+      padding: 6px 12px; font-size: 0.82rem; font-weight: 600; color: var(--text);
+      cursor: pointer; -webkit-tap-highlight-color: transparent; }
+
+    .platform-card { background: var(--card); border-radius: var(--radius);
+      box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden;
+      border-top: 4px solid var(--border); }
+    .platform-card.ig { border-top-color: var(--ig); }
+    .platform-card.x  { border-top-color: var(--x);  }
+    .platform-card.li { border-top-color: var(--li); }
+    .platform-card.tt { border-top-color: var(--tt); }
+
+    .card-header { display: flex; align-items: center; justify-content: space-between;
+      padding: 12px 16px 10px; border-bottom: 1px solid var(--border); }
+    .platform-name { display: flex; align-items: center; gap: 7px;
+      font-weight: 700; font-size: 0.9rem; }
+    .char-badge { font-size: 0.72rem; padding: 2px 7px; border-radius: 10px;
+      background: #F3F4F6; color: var(--muted); font-weight: 600; }
+    .char-badge.over { background: #FEE2E2; color: var(--danger); }
+
+    .btn-copy { background: #F0F0FF; color: var(--primary); border: 1.5px solid #DDD8FF;
+      border-radius: 8px; padding: 6px 14px; font-size: 0.82rem; font-weight: 700;
+      cursor: pointer; transition: all 0.15s; -webkit-tap-highlight-color: transparent; }
+    .btn-copy.copied { background: var(--success); color: #fff; border-color: var(--success); }
+
+    .post-content { padding: 14px 16px 16px; font-size: 0.92rem; line-height: 1.65;
+      white-space: pre-wrap; word-break: break-word; }
+
+    /* error */
+    .error-box { background: #FEE2E2; color: #991B1B; border-radius: 10px;
+      padding: 12px 16px; font-size: 0.88rem; margin-bottom: 16px; display: none; }
+    .error-box.visible { display: block; }
+
+    /* toast */
+    .toast { position: fixed; bottom: 24px; left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1A1A2E; color: #fff; padding: 10px 20px; border-radius: 24px;
+      font-size: 0.85rem; font-weight: 600; pointer-events: none; z-index: 100;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1); white-space: nowrap; }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* key hint */
+    .key-hint { font-size: 0.78rem; color: var(--muted); margin-top: 8px; text-align: center; }
+    .key-hint a { color: var(--primary); text-decoration: none; }
+  </style>
+</head>
+<body>
+
+<!-- ── API Key Setup Screen ── -->
+<div id="setupScreen" class="screen">
+  <header>
+    <h1>✦ Social Post Generator</h1>
+    <p>Set up your Anthropic API key to get started</p>
+  </header>
+  <main>
+    <div class="card">
+      <h2>Enter your API key</h2>
+      <p class="subtitle">Your key is saved only on this device and never sent anywhere except Anthropic's API.</p>
+      <label for="keyInput">Anthropic API Key</label>
+      <input type="password" id="keyInput" placeholder="sk-ant-…" autocomplete="off" autocorrect="off" spellcheck="false">
+      <p class="key-hint">Get a key at <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a></p>
+      <div class="error-box" id="setupError"></div>
+      <button class="btn btn-primary" onclick="saveKey()">Save & Continue →</button>
+    </div>
+  </main>
+</div>
+
+<!-- ── Main Generator Screen ── -->
+<div id="mainScreen" class="screen">
+  <header>
+    <div class="header-row">
+      <div>
+        <h1>✦ Social Post Generator</h1>
+        <p>Claude AI · Coworking · Productivity</p>
+      </div>
+      <button class="btn-settings" onclick="showSetup()" title="API Key Settings">⚙</button>
+    </div>
+  </header>
+  <main>
+    <div class="card" id="formCard">
+      <label for="topicInput">What do you want to post about?</label>
+      <textarea id="topicInput" rows="3"
+        placeholder="e.g. How Claude helps me write faster and think clearer…"></textarea>
+
+      <div class="chips-label">Quick topics</div>
+      <div class="chips" id="chips"></div>
+
+      <div class="error-box" id="genError"></div>
+      <button class="btn btn-primary" id="generateBtn" onclick="generate()">Generate Posts ✦</button>
+    </div>
+
+    <div class="loading" id="loading" style="display:none">
+      <div class="spinner"></div>
+      <p>Crafting your posts…</p>
+      <div class="progress-text" id="progressText"></div>
+    </div>
+
+    <div id="results" style="display:none">
+      <div class="results-header">
+        <h2 id="resultsTitle">Your Posts</h2>
+        <button class="btn-new" onclick="resetToForm()">← New</button>
+      </div>
+      <div id="cards"></div>
+    </div>
+  </main>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+const TOPICS = [
+  "Claude AI's ability to help with complex writing and research tasks",
+  "How AI coworking spaces are changing the way teams collaborate",
+  "Practical ways to use Claude to supercharge your workday productivity",
+  "The future of human-AI collaboration in creative work",
+  "How Claude helps content creators produce better work faster",
+  "Using AI tools to build stronger remote and coworking communities",
+  "Why thoughtful AI design matters for everyday professionals",
+  "Claude's approach to honest, helpful, and safe AI assistance",
+  "How AI is reshaping the modern coworking experience",
+  "Getting more done with less stress using Claude as your AI partner",
+];
+
+const SYSTEM_PROMPT = `You are a social media expert specializing in AI technology and professional workspace content.
+You write authentic, engaging posts that resonate with professionals, entrepreneurs, and AI enthusiasts.
+Your posts are human, relatable, and never feel robotic or overly promotional.
+Always write in first or second person — never third person brand-speak.`;
+
+const PLATFORMS = [
+  { key: "INSTAGRAM", label: "Instagram",   icon: "📸", cls: "ig" },
+  { key: "TWITTER/X", label: "Twitter / X", icon: "𝕏",  cls: "x"  },
+  { key: "LINKEDIN",  label: "LinkedIn",    icon: "💼", cls: "li" },
+  { key: "TIKTOK",    label: "TikTok",      icon: "🎵", cls: "tt" },
+];
+
+function buildPrompt(topic) {
+  return `Create social media posts about this topic: ${topic}
+
+Write one post for each platform below. Follow the platform's specific requirements exactly.
+
+---
+
+### INSTAGRAM
+- Max 2,200 characters
+- Engaging hook in the first line (this shows before "more")
+- Personal, visual, and community-focused tone
+- 10-15 relevant hashtags at the end (mix of popular and niche)
+- Include a clear call to action
+
+### TWITTER/X
+- Max 280 characters (including spaces and hashtags) — this is a hard limit, count carefully
+- Punchy, conversational, and shareable
+- 2-3 hashtags woven naturally or at the end
+- One clear, quotable idea
+
+### LINKEDIN
+- 400-800 words for best performance
+- Professional but personable tone — thought leadership, not corporate speak
+- Start with a bold hook (not "I'm excited to share...")
+- Share a specific insight, lesson, or perspective
+- End with a question to drive comments
+- 3-5 professional hashtags at the very end
+
+### TIKTOK
+- This is the caption for a short video — 100-200 characters works best
+- Casual, fun, and direct
+- Reference what the video is showing or doing
+- 6-10 trending hashtags (#ai #tech #productivity #coworking etc.)
+- Creates curiosity or urgency to watch
+
+---
+
+Format your response exactly as shown above with the ### PLATFORM headers.
+Write each post completely — do not use placeholders like [your name] or [link].`;
+}
+
+// ── Key management ──────────────────────────────────────────────────────────
+
+function getKey() { return localStorage.getItem("anthropic_key") || ""; }
+
+function saveKey() {
+  const key = document.getElementById("keyInput").value.trim();
+  if (!key.startsWith("sk-ant-")) {
+    showError("setupError", "Key should start with sk-ant-…");
+    return;
+  }
+  localStorage.setItem("anthropic_key", key);
+  showMain();
+}
+
+function showSetup() {
+  document.getElementById("keyInput").value = getKey();
+  show("setupScreen");
+  document.getElementById("keyInput").focus();
+}
+
+function showMain() {
+  show("mainScreen");
+  buildChips();
+}
+
+function show(screenId) {
+  document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+  document.getElementById(screenId).classList.add("active");
+}
+
+// ── Chips ───────────────────────────────────────────────────────────────────
+
+let activeChip = null;
+
+function buildChips() {
+  const container = document.getElementById("chips");
+  if (container.children.length) return; // already built
+  TOPICS.forEach(topic => {
+    const btn = document.createElement("button");
+    btn.className = "chip";
+    btn.textContent = topic.length > 40 ? topic.slice(0, 40) + "…" : topic;
+    btn.onclick = () => {
+      if (activeChip) activeChip.classList.remove("active");
+      btn.classList.add("active");
+      activeChip = btn;
+      document.getElementById("topicInput").value = topic;
+    };
+    container.appendChild(btn);
+  });
+}
+
+// ── Generation ───────────────────────────────────────────────────────────────
+
+async function generate() {
+  const topic = document.getElementById("topicInput").value.trim();
+  if (!topic) { showError("genError", "Please enter a topic or tap one above."); return; }
+  hideError("genError");
+
+  const apiKey = getKey();
+  if (!apiKey) { showSetup(); return; }
+
+  setFormVisible(false);
+  document.getElementById("loading").style.display = "block";
+  document.getElementById("results").style.display = "none";
+
+  const progressEl = document.getElementById("progressText");
+  let charCount = 0;
+  let fullText = "";
+
+  try {
+    const response = await fetch("https://api.anthropic.com/v1/messages", {
+      method: "POST",
+      headers: {
+        "content-type": "application/json",
+        "x-api-key": apiKey,
+        "anthropic-version": "2023-06-01",
+        "anthropic-dangerous-direct-browser-access": "true",
+      },
+      body: JSON.stringify({
+        model: "claude-opus-4-7",
+        max_tokens: 4000,
+        stream: true,
+        system: SYSTEM_PROMPT,
+        messages: [{ role: "user", content: buildPrompt(topic) }],
+      }),
+    });
+
+    if (!response.ok) {
+      const err = await response.json().catch(() => ({}));
+      throw new Error(err?.error?.message || `HTTP ${response.status}`);
+    }
+
+    const reader = response.body.getReader();
+    const decoder = new TextDecoder();
+    let buf = "";
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      buf += decoder.decode(value, { stream: true });
+      const lines = buf.split("\n");
+      buf = lines.pop();
+      for (const line of lines) {
+        if (!line.startsWith("data: ")) continue;
+        const raw = line.slice(6).trim();
+        if (raw === "[DONE]") continue;
+        try {
+          const evt = JSON.parse(raw);
+          if (evt.type === "content_block_delta" && evt.delta?.type === "text_delta") {
+            fullText += evt.delta.text;
+            charCount += evt.delta.text.length;
+            progressEl.textContent = `Writing… (${charCount} chars)`;
+          }
+        } catch {}
+      }
+    }
+
+    const posts = parsePosts(fullText);
+    document.getElementById("loading").style.display = "none";
+    showResults(posts, topic);
+
+  } catch (err) {
+    document.getElementById("loading").style.display = "none";
+    setFormVisible(true);
+    const msg = err.message.includes("401") || err.message.includes("auth")
+      ? "Invalid API key. Tap ⚙ to update it."
+      : "Error: " + err.message;
+    showError("genError", msg);
+  }
+}
+
+function parsePosts(raw) {
+  const keys = ["INSTAGRAM", "TWITTER/X", "LINKEDIN", "TIKTOK"];
+  const posts = {};
+  for (let i = 0; i < keys.length; i++) {
+    const header = `### ${keys[i]}`;
+    const start = raw.indexOf(header);
+    if (start === -1) continue;
+    const contentStart = start + header.length;
+    let end = raw.length;
+    for (let j = i + 1; j < keys.length; j++) {
+      const pos = raw.indexOf(`### ${keys[j]}`);
+      if (pos !== -1) { end = pos; break; }
+    }
+    posts[keys[i]] = raw.slice(contentStart, end).trim();
+  }
+  return posts;
+}
+
+function showResults(posts, topic) {
+  const container = document.getElementById("cards");
+  container.innerHTML = "";
+  document.getElementById("resultsTitle").textContent =
+    topic.length > 44 ? topic.slice(0, 44) + "…" : topic;
+
+  for (const p of PLATFORMS) {
+    const content = posts[p.key] || "(No content generated)";
+    const isX = p.key === "TWITTER/X";
+    const count = content.length;
+    const badge = isX
+      ? `<span class="char-badge ${count > 280 ? "over" : ""}">${count}/280</span>` : "";
+
+    const card = document.createElement("div");
+    card.className = `platform-card ${p.cls}`;
+    card.innerHTML = `
+      <div class="card-header">
+        <div class="platform-name">
+          <span>${p.icon}</span> ${p.label} ${badge}
+        </div>
+        <button class="btn-copy" data-content="${esc(content)}">Copy</button>
+      </div>
+      <div class="post-content">${escHtml(content)}</div>`;
+    container.appendChild(card);
+  }
+
+  container.querySelectorAll(".btn-copy").forEach(btn => {
+    btn.addEventListener("click", () => copyText(btn, btn.dataset.content));
+  });
+
+  document.getElementById("results").style.display = "block";
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ── Helpers ──────────────────────────────────────────────────────────────────
+
+function setFormVisible(v) {
+  document.getElementById("formCard").style.display = v ? "block" : "none";
+  document.getElementById("generateBtn").disabled = !v;
+}
+
+function resetToForm() {
+  document.getElementById("results").style.display = "none";
+  setFormVisible(true);
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function showError(id, msg) {
+  const el = document.getElementById(id);
+  el.textContent = msg;
+  el.style.display = "block";
+}
+function hideError(id) { document.getElementById(id).style.display = "none"; }
+
+function copyText(btn, text) {
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = "✓ Copied";
+    btn.classList.add("copied");
+    setTimeout(() => { btn.textContent = "Copy"; btn.classList.remove("copied"); }, 2200);
+    toast("Copied to clipboard!");
+  }).catch(() => {
+    const ta = Object.assign(document.createElement("textarea"),
+      { value: text, style: "position:fixed;opacity:0" });
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand("copy"); toast("Copied!"); } catch {}
+    document.body.removeChild(ta);
+  });
+}
+
+function toast(msg) {
+  const el = document.getElementById("toast");
+  el.textContent = msg;
+  el.classList.add("show");
+  setTimeout(() => el.classList.remove("show"), 2200);
+}
+
+function esc(s)    { return s.replace(/"/g, "&quot;"); }
+function escHtml(s) {
+  return s.replace(/&/g,"&amp;").replace(/</g,"&lt;")
+          .replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+}
+
+// ── Enter to generate on mobile ──────────────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("topicInput").addEventListener("keydown", e => {
+    if (e.key === "Enter" && !e.shiftKey && window.innerWidth < 768) {
+      e.preventDefault(); generate();
+    }
+  });
+  document.getElementById("keyInput").addEventListener("keydown", e => {
+    if (e.key === "Enter") saveKey();
+  });
+
+  // Route to correct screen
+  getKey() ? showMain() : showSetup();
+});
+</script>
+</body>
+</html>
