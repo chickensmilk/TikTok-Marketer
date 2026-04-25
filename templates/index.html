@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+  <meta name="theme-color" content="#5046E5">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>Social Post Generator</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #F4F4F8;
+      --card: #ffffff;
+      --text: #1A1A2E;
+      --muted: #6B7280;
+      --border: #E5E7EB;
+      --primary: #5046E5;
+      --primary-dark: #3D35C9;
+      --success: #10B981;
+      --ig: #E1306C;
+      --x: #000000;
+      --li: #0A66C2;
+      --tt: #EE1D52;
+      --radius: 14px;
+      --shadow: 0 2px 12px rgba(0,0,0,0.08);
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── Header ── */
+    header {
+      background: var(--primary);
+      color: white;
+      padding: 20px 16px 18px;
+      text-align: center;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 700; letter-spacing: -0.3px; }
+    header p  { font-size: 0.85rem; opacity: 0.85; margin-top: 4px; }
+
+    /* ── Layout ── */
+    main { max-width: 640px; margin: 0 auto; padding: 20px 16px 40px; }
+
+    /* ── Form card ── */
+    .form-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 20px;
+      margin-bottom: 20px;
+    }
+    .form-card label {
+      display: block;
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 8px;
+      color: var(--text);
+    }
+
+    textarea {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      font-size: 1rem; /* prevents iOS zoom */
+      font-family: inherit;
+      color: var(--text);
+      background: #FAFAFA;
+      resize: none;
+      outline: none;
+      transition: border-color 0.2s;
+      line-height: 1.5;
+    }
+    textarea:focus { border-color: var(--primary); background: white; }
+    textarea::placeholder { color: #9CA3AF; }
+
+    /* ── Topic chips ── */
+    .chips-label {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      margin: 14px 0 8px;
+    }
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .chip {
+      background: #F0F0FF;
+      color: var(--primary);
+      border: 1.5px solid #DDD8FF;
+      border-radius: 20px;
+      padding: 6px 12px;
+      font-size: 0.78rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .chip:active, .chip.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+
+    /* ── Generate button ── */
+    .btn-generate {
+      display: block;
+      width: 100%;
+      margin-top: 18px;
+      padding: 16px;
+      background: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 12px;
+      font-size: 1rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background 0.15s, transform 0.1s;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-generate:active { background: var(--primary-dark); transform: scale(0.98); }
+    .btn-generate:disabled { background: #A5A0F0; cursor: not-allowed; transform: none; }
+
+    /* ── Loading ── */
+    .loading {
+      text-align: center;
+      padding: 40px 20px;
+      display: none;
+    }
+    .loading.visible { display: block; }
+    .spinner {
+      width: 42px; height: 42px;
+      border: 4px solid #DDD8FF;
+      border-top-color: var(--primary);
+      border-radius: 50%;
+      animation: spin 0.8s linear infinite;
+      margin: 0 auto 14px;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading p { color: var(--muted); font-size: 0.9rem; }
+    .loading .progress-text {
+      font-size: 0.78rem;
+      color: #A0A0B0;
+      margin-top: 6px;
+      min-height: 18px;
+    }
+
+    /* ── Results ── */
+    #results { display: none; }
+    #results.visible { display: block; }
+
+    .results-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 14px;
+    }
+    .results-header h2 { font-size: 1rem; font-weight: 700; }
+    .btn-new {
+      background: none;
+      border: 1.5px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 12px;
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--text);
+      cursor: pointer;
+      -webkit-tap-highlight-color: transparent;
+    }
+    .btn-new:active { background: var(--bg); }
+
+    /* ── Platform cards ── */
+    .platform-card {
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      margin-bottom: 16px;
+      overflow: hidden;
+      border-top: 4px solid var(--border);
+    }
+    .platform-card.ig  { border-top-color: var(--ig); }
+    .platform-card.x   { border-top-color: var(--x); }
+    .platform-card.li  { border-top-color: var(--li); }
+    .platform-card.tt  { border-top-color: var(--tt); }
+
+    .card-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 12px 16px 10px;
+      border-bottom: 1px solid var(--border);
+    }
+    .platform-name {
+      display: flex;
+      align-items: center;
+      gap: 7px;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+    .platform-icon { font-size: 1.1rem; }
+
+    .char-badge {
+      font-size: 0.72rem;
+      padding: 2px 7px;
+      border-radius: 10px;
+      background: #F3F4F6;
+      color: var(--muted);
+      font-weight: 600;
+    }
+    .char-badge.over { background: #FEE2E2; color: #DC2626; }
+
+    .btn-copy {
+      background: #F0F0FF;
+      color: var(--primary);
+      border: 1.5px solid #DDD8FF;
+      border-radius: 8px;
+      padding: 6px 14px;
+      font-size: 0.82rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: all 0.15s;
+      -webkit-tap-highlight-color: transparent;
+      white-space: nowrap;
+    }
+    .btn-copy:active  { background: var(--primary); color: white; border-color: var(--primary); }
+    .btn-copy.copied  { background: var(--success); color: white; border-color: var(--success); }
+
+    .post-content {
+      padding: 14px 16px 16px;
+      font-size: 0.92rem;
+      line-height: 1.65;
+      color: var(--text);
+      white-space: pre-wrap;
+      word-break: break-word;
+    }
+
+    /* ── Toast ── */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1A1A2E;
+      color: white;
+      padding: 10px 20px;
+      border-radius: 24px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      transition: transform 0.3s cubic-bezier(0.34,1.56,0.64,1);
+      pointer-events: none;
+      z-index: 100;
+      white-space: nowrap;
+    }
+    .toast.show { transform: translateX(-50%) translateY(0); }
+
+    /* ── Error ── */
+    .error-msg {
+      background: #FEE2E2;
+      color: #991B1B;
+      border-radius: 10px;
+      padding: 12px 16px;
+      font-size: 0.88rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+    .error-msg.visible { display: block; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✦ Social Post Generator</h1>
+  <p>Claude AI · Coworking · Productivity</p>
+</header>
+
+<main>
+
+  <!-- Form -->
+  <div class="form-card" id="formCard">
+    <label for="topicInput">What do you want to post about?</label>
+    <textarea id="topicInput" rows="3"
+      placeholder="e.g. How Claude helps me write faster and think clearer…"></textarea>
+
+    <div class="chips-label">Quick topics</div>
+    <div class="chips" id="chips">
+      {% for topic in topics %}
+      <button class="chip" onclick="selectChip(this, {{ topic|tojson }})">
+        {{ topic | truncate(38, True, '…') }}
+      </button>
+      {% endfor %}
+    </div>
+
+    <div class="error-msg" id="errorMsg"></div>
+
+    <button class="btn-generate" id="generateBtn" onclick="generate()">
+      Generate Posts ✦
+    </button>
+  </div>
+
+  <!-- Loading -->
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Crafting your posts…</p>
+    <div class="progress-text" id="progressText"></div>
+  </div>
+
+  <!-- Results -->
+  <div id="results">
+    <div class="results-header">
+      <h2 id="resultsTitle">Your Posts</h2>
+      <button class="btn-new" onclick="reset()">← New</button>
+    </div>
+
+    <div id="cards"></div>
+  </div>
+
+</main>
+
+<!-- Toast -->
+<div class="toast" id="toast">Copied!</div>
+
+<script>
+  const PLATFORMS = [
+    { key: "INSTAGRAM", label: "Instagram",  icon: "📸", cls: "ig" },
+    { key: "TWITTER/X", label: "Twitter / X", icon: "𝕏",  cls: "x"  },
+    { key: "LINKEDIN",  label: "LinkedIn",   icon: "💼", cls: "li" },
+    { key: "TIKTOK",    label: "TikTok",     icon: "🎵", cls: "tt" },
+  ];
+
+  let activeChip = null;
+
+  function selectChip(el, topic) {
+    if (activeChip) activeChip.classList.remove("active");
+    el.classList.add("active");
+    activeChip = el;
+    document.getElementById("topicInput").value = topic;
+  }
+
+  function showError(msg) {
+    const el = document.getElementById("errorMsg");
+    el.textContent = msg;
+    el.classList.add("visible");
+  }
+
+  function hideError() {
+    document.getElementById("errorMsg").classList.remove("visible");
+  }
+
+  function generate() {
+    const topic = document.getElementById("topicInput").value.trim();
+    if (!topic) {
+      showError("Please enter a topic or pick one above.");
+      return;
+    }
+    hideError();
+
+    // Hide form, show loader
+    document.getElementById("formCard").style.display = "none";
+    document.getElementById("loading").classList.add("visible");
+    document.getElementById("results").classList.remove("visible");
+    document.getElementById("generateBtn").disabled = true;
+
+    const progressEl = document.getElementById("progressText");
+    let charCount = 0;
+
+    fetch("/api/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ topic }),
+    }).then(response => {
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+
+      function read() {
+        reader.read().then(({ done, value }) => {
+          if (done) return;
+          buffer += decoder.decode(value, { stream: true });
+
+          const lines = buffer.split("\n");
+          buffer = lines.pop();
+
+          for (const line of lines) {
+            if (!line.startsWith("data: ")) continue;
+            try {
+              const data = JSON.parse(line.slice(6));
+
+              if (data.error) {
+                showLoader(false);
+                showError("Error: " + data.error);
+                document.getElementById("formCard").style.display = "block";
+                return;
+              }
+
+              if (data.chunk) {
+                charCount += data.chunk.length;
+                progressEl.textContent = `Writing… (${charCount} chars)`;
+              }
+
+              if (data.done) {
+                showLoader(false);
+                showResults(data.posts, data.topic);
+              }
+            } catch {}
+          }
+          read();
+        });
+      }
+      read();
+    }).catch(err => {
+      showLoader(false);
+      showError("Network error. Please try again.");
+      document.getElementById("formCard").style.display = "block";
+    });
+  }
+
+  function showLoader(visible) {
+    document.getElementById("loading").classList.toggle("visible", visible);
+    document.getElementById("generateBtn").disabled = !visible;
+  }
+
+  function showResults(posts, topic) {
+    const container = document.getElementById("cards");
+    container.innerHTML = "";
+
+    document.getElementById("resultsTitle").textContent =
+      topic.length > 42 ? topic.slice(0, 42) + "…" : topic;
+
+    for (const platform of PLATFORMS) {
+      const content = posts[platform.key] || "(No content generated)";
+      const isTwitter = platform.key === "TWITTER/X";
+      const charCount = content.length;
+
+      let charBadge = "";
+      if (isTwitter) {
+        const over = charCount > 280;
+        charBadge = `<span class="char-badge ${over ? 'over' : ''}">${charCount}/280</span>`;
+      }
+
+      const card = document.createElement("div");
+      card.className = `platform-card ${platform.cls}`;
+      card.innerHTML = `
+        <div class="card-header">
+          <div class="platform-name">
+            <span class="platform-icon">${platform.icon}</span>
+            ${platform.label}
+            ${charBadge}
+          </div>
+          <button class="btn-copy" onclick="copyPost(this, ${JSON.stringify(content)})">Copy</button>
+        </div>
+        <div class="post-content">${escapeHtml(content)}</div>
+      `;
+      container.appendChild(card);
+    }
+
+    document.getElementById("results").classList.add("visible");
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function copyPost(btn, text) {
+    navigator.clipboard.writeText(text).then(() => {
+      btn.textContent = "✓ Copied";
+      btn.classList.add("copied");
+      setTimeout(() => {
+        btn.textContent = "Copy";
+        btn.classList.remove("copied");
+      }, 2000);
+      showToast("Copied to clipboard!");
+    }).catch(() => {
+      // Fallback for older mobile browsers
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      ta.style.position = "fixed";
+      ta.style.opacity = "0";
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      try {
+        document.execCommand("copy");
+        showToast("Copied!");
+      } catch {}
+      document.body.removeChild(ta);
+    });
+  }
+
+  function showToast(msg) {
+    const toast = document.getElementById("toast");
+    toast.textContent = msg;
+    toast.classList.add("show");
+    setTimeout(() => toast.classList.remove("show"), 2200);
+  }
+
+  function reset() {
+    document.getElementById("results").classList.remove("visible");
+    document.getElementById("formCard").style.display = "block";
+    document.getElementById("generateBtn").disabled = false;
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }
+
+  function escapeHtml(str) {
+    return str
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  }
+
+  // Allow Enter+Shift for new line, plain Enter submits on small screens
+  document.getElementById("topicInput").addEventListener("keydown", (e) => {
+    if (e.key === "Enter" && !e.shiftKey && window.innerWidth < 768) {
+      e.preventDefault();
+      generate();
+    }
+  });
+</script>
+
+</body>
+</html>
