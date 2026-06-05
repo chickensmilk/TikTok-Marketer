@@ -1,0 +1,182 @@
+# Web Page Copy — Pixel-Perfect Website Capture to Figma
+
+Captures any live external website pixel-perfectly into Figma — exact logo, nav, hero, typography, spacing, images, gradients, icons, and separators. Then optionally overlays new design components (e.g. author bios, CTAs, banners) at precise positions within the captured page.
+
+## When to use
+- "Copy this page exactly into Figma"
+- "Recreate this website pixel-for-pixel"
+- "Capture [URL] and add [component] to it"
+- Any time you need a pixel-accurate Figma representation of a live page to present a design addition or change in full context
+
+## What makes this work
+Playwright strips Content Security Policy headers from all responses, injects the Figma capture script into the live DOM, scrolls to load lazy images, then submits the full rendered page to Figma. The result is the actual rendered page — not a screenshot — including real fonts, real colors, real spacing, real SVGs and images.
+
+## Required setup
+- Playwright installed: `cd /tmp && mkdir pw-capture && cd pw-capture && npm init -y && npm install playwright && npx playwright install chromium`
+- Figma MCP authenticated (plugin:figma:figma tools available)
+- Target Figma file exists (create with `create_new_file` if needed)
+
+---
+
+## Step-by-step process
+
+### Step 1 — Get capture IDs (one per page)
+Call `generate_figma_design` once per page you want to capture. Each call returns a single-use `captureId`. Get ALL capture IDs upfront before running any Playwright scripts.
+
+```
+generate_figma_design({ fileKey: "YOUR_FILE_KEY" })
+// Returns: captureId: "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+```
+
+For N pages, call N times in parallel to get N capture IDs.
+
+### Step 2 — Run Playwright capture (one per page, run in parallel/background)
+
+```javascript
+// capture-page.js
+const { chromium } = require('playwright');
+
+(async () => {
+  const browser = await chromium.launch({ headless: true });
+  const context = await browser.newContext();
+  const page = await context.newPage();
+  await page.setViewportSize({ width: 1440, height: 900 });
+
+  // CRITICAL: Strip CSP headers so the capture script can inject
+  await page.route('**/*', async (route) => {
+    const response = await route.fetch();
+    const headers = { ...response.headers() };
+    delete headers['content-security-policy'];
+    delete headers['content-security-policy-report-only'];
+    await route.fulfill({ response, headers });
+  });
+
+  await page.goto('TARGET_URL', { waitUntil: 'networkidle', timeout: 45000 });
+
+  // Dismiss cookie banners
+  try { await page.click('button:has-text("Ok, got it")', { timeout: 3000 }); await page.waitForTimeout(500); } catch {}
+  try { await page.click('button:has-text("Accept")', { timeout: 1000 }); } catch {}
+
+  // Scroll to load ALL lazy images
+  await page.evaluate(async () => {
+    await new Promise(resolve => {
+      let total = 0;
+      const timer = setInterval(() => {
+        window.scrollBy(0, 400);
+        total += 400;
+        if (total > document.body.scrollHeight) { clearInterval(timer); resolve(); }
+      }, 100);
+    });
+  });
+  await page.evaluate(() => window.scrollTo(0, 0));
+  await page.waitForTimeout(1500);
+
+  // Inject Figma capture script
+  const captureScriptRes = await page.context().request.get('https://mcp.figma.com/mcp/html-to-design/capture.js');
+  const captureScript = await captureScriptRes.text();
+  await page.evaluate((s) => {
+    const el = document.createElement('script');
+    el.textContent = s;
+    document.head.appendChild(el);
+  }, captureScript);
+  await page.waitForTimeout(800);
+
+  // Submit capture
+  const result = await page.evaluate(() =>
+    window.figma.captureForDesign({
+      captureId: 'CAPTURE_ID_FROM_STEP_1',
+      endpoint: 'https://mcp.figma.com/mcp/capture/CAPTURE_ID_FROM_STEP_1/submit',
+      selector: 'body'
+    })
+  );
+
+  console.log('Done:', JSON.stringify(result));
+  await browser.close();
+})();
+```
+
+Run with: `node capture-page.js`
+For multiple pages simultaneously: use `run_in_background: true` on the Bash tool.
+
+### Step 3 — Poll until completed
+
+```
+generate_figma_design({ fileKey: "YOUR_FILE_KEY", captureId: "CAPTURE_ID" })
+```
+
+- Status `pending` or `processing` → wait 5 seconds, poll again
+- Status `completed` → returns node ID of the captured frame in Figma
+- Poll up to 10 times before troubleshooting
+
+### Step 4 — Add design components to the capture (optional)
+
+After capture completes, the page is a real Figma frame. To add overlaid components (bio cards, banners, CTAs, annotations):
+
+**CRITICAL: Captured pages have nested auto-layout containers. Appending children to auto-layout frames collapses them to 0 height. Always add overlay components as direct children of the ROOT CAPTURE FRAME (layout mode = NONE), not inner containers.**
+
+```javascript
+// use_figma: Add component as absolute overlay on capture
+const captureFrame = await figma.getNodeByIdAsync("CAPTURE_NODE_ID");
+// captureFrame.layoutMode will be "NONE" — safe to add absolute children
+
+const component = figma.createFrame();
+component.x = 0;
+component.y = TARGET_Y; // position within the capture
+component.resize(1440, HEIGHT);
+// ... build component ...
+captureFrame.appendChild(component); // Direct child = absolute positioning
+```
+
+**Finding target Y position:**
+```javascript
+// Find a reference node and get its absolute canvas Y
+function absolutePos(node) {
+  let x = 0, y = 0, n = node;
+  while (n && n.type !== 'PAGE') { x += n.x||0; y += n.y||0; n = n.parent; }
+  return { x: Math.round(x), y: Math.round(y) };
+}
+const refNode = await figma.getNodeByIdAsync("NODE_ID");
+const refAbs = absolutePos(refNode);
+const captureAbs = absolutePos(captureFrame);
+const relY = refAbs.y - captureAbs.y; // Y relative to capture frame
+```
+
+---
+
+## Multi-page parallel workflow
+
+```
+// 1. Get all capture IDs at once
+captureId1 = generate_figma_design(fileKey)   // page 1
+captureId2 = generate_figma_design(fileKey)   // page 2
+
+// 2. Run Playwright captures in background simultaneously
+Bash(capture-page1.js, run_in_background=true)
+Bash(capture-page2.js, run_in_background=true)
+
+// 3. Poll both until completed
+generate_figma_design(fileKey, captureId1) → poll loop
+generate_figma_design(fileKey, captureId2) → poll loop
+
+// 4. Add components to each capture frame
+use_figma → add to captureFrame1
+use_figma → add to captureFrame2
+```
+
+---
+
+## Common gotchas
+
+| Problem | Cause | Fix |
+|---|---|---|
+| Capture submits but page looks broken | CSP blocked script injection | Route handler must delete BOTH csp headers before `page.goto` |
+| Lazy images missing | Page not scrolled before capture | Always scroll to bottom then back to top before injecting script |
+| Component collapses to 0 height after append | Appended to auto-layout child frame | Append to ROOT capture frame (layoutMode: NONE) instead |
+| captureId not found | Used wrong captureId in Playwright script | Each page needs its own unique captureId — never reuse |
+| Capture stays "pending" forever | Script injection failed silently | Check CSP stripping; verify `window.figma` is defined after injection |
+| Cookie banner blocks content | Banner not dismissed | Try multiple button text variants: "Ok, got it", "Accept", "Accept All" |
+
+---
+
+## Key insight (why this works vs screenshots)
+Regular screenshots give a PNG — no layers, no text, no real assets. The Figma capture script converts the live rendered DOM into actual Figma frames with real fills, real text nodes, real image hashes, and real layout. The result is editable, zoomable, and accurate to the pixel because it reads the browser's computed styles directly.

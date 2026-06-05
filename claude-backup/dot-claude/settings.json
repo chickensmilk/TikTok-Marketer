@@ -1,0 +1,207 @@
+{
+  "env": {
+    "EVERHOUR_API_KEY": "4b16-1fcd-4f8025-459451-58303029"
+  },
+  "permissions": {
+    "allow": [
+      "mcp__pencil",
+      "Bash(basecamp api *)",
+      "WebFetch(domain:docs.google.com)",
+      "WebFetch(domain:doc-0c-1o-sheets.googleusercontent.com)",
+      "mcp__claude_ai_Slack__slack_search_channels",
+      "mcp__claude_ai_Slack__slack_read_channel",
+      "Bash(potrace --version)",
+      "Bash(mkdir -p ~/.claude/skills/smart-vectorize/scripts)",
+      "Edit(/.claude/skills/smart-vectorize/**)",
+      "Bash(basecamp unassign *)",
+      "WebFetch(domain:mapc.up.railway.app)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:vectorizer.ai)",
+      "Bash(rsvg-convert -w 1400 /Users/richardvargas/Desktop/outdoors-svg/its-better-outdoors-FINAL.svg -o /Users/richardvargas/Desktop/outdoors-svg/its-better-outdoors-FINAL-check.png)",
+      "Bash(xargs -I{} basename {})",
+      "mcp__claude_ai_Slack__slack_read_canvas",
+      "mcp__claude_ai_Slack__slack_read_file",
+      "Bash(basecamp comment *)",
+      "WebFetch(domain:zaxlsdigyard-comingsoon.webflow.io)",
+      "Bash(higgsfield account *)",
+      "Bash(higgsfield generate *)",
+      "Bash(rsvg-convert -w 1400 /Users/richardvargas/Desktop/outdoors-svg/its-better-outdoors-potrace2.svg -o /Users/richardvargas/Desktop/outdoors-svg/potrace2-render.png)",
+      "WebFetch(domain:www.ebay.com)",
+      "mcp__claude_ai_Slack__slack_read_user_profile",
+      "mcp__claude_ai_Slack__slack_send_message",
+      "Skill(schedule)",
+      "Skill(schedule:*)",
+      "Bash(rm /Users/richardvargas/.claude/projects/-Users-richardvargas/memory/basecamp-assignments-project.md)",
+      "Bash(cat netlify.toml)",
+      "Bash(ls -la .netlify/)",
+      "mcp__claude_ai_Microsoft_365__outlook_email_search",
+      "mcp__claude_ai_Microsoft_365__read_resource",
+      "mcp__claude_ai_Google_Drive__create_file",
+      "mcp__claude_ai_Slack__slack_read_thread",
+      "WebFetch(domain:www.athensdentaldesign.com)",
+      "Bash(basecamp timesheet *)",
+      "WebFetch(domain:developers.instapage.com)",
+      "WebFetch(domain:devdocs.instapage.com)",
+      "WebFetch(domain:www.adentalcenterinriverview.com)",
+      "Bash(mkdir -p ~/.claude/skills/instapage-gdp/scripts)",
+      "Edit(/.claude/skills/instapage-gdp/**)",
+      "Bash(sort -k2)",
+      "mcp__claude_ai_Slack__slack_search_public",
+      "Bash(hs --version)",
+      "Bash(hs accounts *)",
+      "WebFetch(domain:api.github.com)",
+      "mcp__lightroom__list_develop_presets",
+      "mcp__lightroom__list_collections",
+      "mcp__claude_ai_Google_Drive__search_files",
+      "mcp__lightroom__import_photos",
+      "mcp__lightroom__search_photos",
+      "mcp__lightroom__create_collection",
+      "mcp__lightroom__add_to_collection",
+      "mcp__lightroom__apply_develop_preset",
+      "mcp__lightroom__set_develop_settings",
+      "WebFetch(domain:mcpmarket.com)",
+      "mcp__lightroom__export_photos",
+      "Bash(cp ~/Downloads/client-photos-test/previews/RSPA5440.jpg ~/Downloads/client-photos-test/previews/RSPA5440_after.jpg)",
+      "mcp__lightroom__get_photo_metadata",
+      "mcp__lightroom__copy_develop_settings",
+      "Bash(mkdir -p ~/.claude/skills/photo-editor)",
+      "Edit(/.claude/skills/photo-editor/**)",
+      "Bash(chmod +x ~/Downloads/client-photos-athens-dental/download_jpgs.sh)",
+      "Bash(bash ~/Downloads/client-photos-athens-dental/download_jpgs.sh)",
+      "mcp__claude_ai_higgsfield__transactions",
+      "Bash(chmod +x ~/Downloads/client-photos-athens-dental/download_cr3s.sh)",
+      "Bash(bash ~/Downloads/client-photos-athens-dental/download_cr3s.sh)",
+      "Edit(/.claude/skills/bc-assistant/**)",
+      "Bash(rm /tmp/test_rate_limit.cr3)",
+      "WebFetch(domain:uc3d9d4da7e4607b0c9ddc959ac5.dl.dropboxusercontent.com)",
+      "WebFetch(domain:www.dropbox.com)",
+      "WebFetch(domain:uce99f84ee8acc5c7019c9d81588.dl.dropboxusercontent.com)",
+      "Bash(cp webfetch-1780461687765-z46k6u.bin skill.zip)",
+      "Bash(unzip -o skill.zip -d skill_extracted)",
+      "WebFetch(domain:logogeek.uk)",
+      "WebFetch(domain:www.brandtuned.com)",
+      "Bash(chmod +x ~/Downloads/client-photos-athens-dental/download_all_jpgs.sh)",
+      "Bash(bash ~/Downloads/client-photos-athens-dental/download_all_jpgs.sh)",
+      "WebFetch(domain:everhour.com)",
+      "WebFetch(domain:api.everhour.com)",
+      "Bash(ls ~/.claude/skills/ 2>/dev/null || echo \"skills dir does not exist\" && mkdir -p ~/.claude/skills/logo-pipeline)",
+      "Edit(/.claude/skills/logo-pipeline/**)",
+      "mcp__claude_ai_higgsfield__generate_image",
+      "mcp__claude_ai_higgsfield__job_display",
+      "WebFetch(domain:ipolish.fashion)",
+      "Bash(zip -r \"/Users/richardvargas/Downloads/creative-ops-assistant-NEW-v2.skill\" skill-build/)",
+      "Bash(cp \"/Users/richardvargas/Downloads/creative-ops-assistant-NEW-v2.skill\" ~/.claude/skills/ && echo \"Done\")",
+      "Bash(rm ~/.claude/skills/creative-ops-assistant-NEW-v2.skill)",
+      "Bash(mkdir ~/.claude/skills/creative-ops-assistant-NEW)",
+      "Bash(cp -r /tmp/creative-ops-skill/skill-build/* ~/.claude/skills/creative-ops-assistant-NEW/)",
+      "Edit(/.claude/skills/creative-ops-assistant-NEW/**)",
+      "WebFetch(domain:services.mtjulietdentalimplants.com)",
+      "Bash(curl -s \"https://services.mtjulietdentalimplants.com/emergency-dentistry-lp\" > /tmp/lp_page.html && wc -c /tmp/lp_page.html && grep -c \"element-635\" /tmp/lp_page.html)",
+      "Bash(cp /tmp/dexter_schedule.py /Users/richardvargas/.claude/skills/creative-ops-assistant-NEW/references/scheduler.py *)",
+      "Bash(basecamp --help)",
+      "mcp__lightroom__get_selected_photos",
+      "Bash(ps -p 13272 49773 71088 73320 85593 85695 86603 -o pid,command)",
+      "Bash(ps -p 13272,49773,71088,73320,85593,85695,86603 -o pid,command)",
+      "Bash(kill 13272 49773 71088 73320 85593 85695 86603)",
+      "Bash(basecamp attachments *)",
+      "Bash(basecamp files *)",
+      "mcp__claude_ai_Webflow__data_sites_tool",
+      "WebFetch(domain:www.fraud.net)",
+      "WebFetch(domain:seon.io)",
+      "WebFetch(domain:cdn.prod.website-files.com)",
+      "WebFetch(domain:fraudnet-website-staging.webflow.io)",
+      "Bash(npx playwright *)",
+      "Bash(mkdir -p /tmp/fraudnet-pw)",
+      "Bash(npm init *)",
+      "Bash(cp /tmp/fraudnet-extract.js /tmp/fraudnet-pw/extract.js)",
+      "Bash(node extract.js)",
+      "Bash(node screenshot.js)",
+      "mcp__plugin_figma_figma__whoami",
+      "mcp__plugin_figma_figma__create_new_file",
+      "mcp__plugin_figma_figma__generate_figma_design",
+      "mcp__plugin_figma_figma__use_figma",
+      "mcp__plugin_figma_figma__get_screenshot",
+      "mcp__plugin_figma_figma__upload_assets",
+      "mcp__plugin_figma_figma__get_metadata",
+      "Bash(graphify export *)",
+      "Bash(graphify query *)",
+      "Bash(git config *)",
+      "Bash(gh auth *)",
+      "Bash(git --version)",
+      "Bash(gh --version)",
+      "Bash(chmod +x /Users/richardvargas/claude-backup/backup.sh)",
+      "Bash(bash backup.sh)",
+      "Bash(git rm *)"
+    ],
+    "additionalDirectories": [
+      "/Users/richardvargas/.claude/skills/smart-vectorize",
+      "/Users/richardvargas/.claude/skills/instapage-gdp",
+      "/Users/richardvargas/.claude/skills/capacity-check",
+      "/Users/richardvargas/Downloads/client-photos-test/previews",
+      "/Users/richardvargas/.claude/skills",
+      "/private/tmp",
+      "/tmp",
+      "/Users/richardvargas/.claude/skills/creative-ops-assistant-NEW/references"
+    ]
+  },
+  "hooks": {
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "afplay /System/Library/Sounds/Glass.aiff 2>/dev/null || true",
+            "async": true
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "CMD=$(python3 -c \"import json,sys; d=json.load(sys.stdin); print(d.get('tool_input',d).get('command',''))\" 2>/dev/null || true); case \"$CMD\" in *grep*|*rg\\ *|*ripgrep*|*find\\ *|*fd\\ *|*ack\\ *|*ag\\ *)   [ -f graphify-out/graph.json ] &&   echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"graphify: knowledge graph at graphify-out/. For focused questions, run `graphify query \\\"<question>\\\"` (scoped subgraph, usually much smaller than GRAPH_REPORT.md) instead of grepping raw files. Read GRAPH_REPORT.md only for broad architecture context.\"}}'   || true ;; esac"
+          }
+        ]
+      },
+      {
+        "matcher": "Read|Glob",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "HIT=$(python3 -c \"import json,sys;d=json.load(sys.stdin);t=d.get('tool_input',d);s=(str(t.get('file_path') or '')+' '+str(t.get('pattern') or '')+' '+str(t.get('path') or '')).lower().replace(chr(92),'/');exts=('.py','.js','.ts','.tsx','.jsx','.go','.rs','.java','.rb','.c','.h','.cpp','.hpp','.cc','.cs','.kt','.swift','.php','.scala','.lua','.sh','.md','.rst','.txt','.mdx');sys.stdout.write('1' if 'graphify-out/' not in s and any(e in s for e in exts) else '')\" 2>/dev/null || true); if [ \"$HIT\" = 1 ] && [ -f graphify-out/graph.json ]; then echo '{\"hookSpecificOutput\":{\"hookEventName\":\"PreToolUse\",\"additionalContext\":\"graphify: knowledge graph at graphify-out/. For codebase questions, run `graphify query \\\"<question>\\\"` (scoped subgraph, usually much smaller than reading files one by one), `graphify explain \\\"<concept>\\\"`, or `graphify path \\\"<A>\\\" \\\"<B>\\\"`, instead of reading source files to answer. Read raw files to modify or debug specific code, or when the graph lacks the detail.\"}}'; fi || true"
+          }
+        ]
+      }
+    ]
+  },
+  "enabledPlugins": {
+    "figma@claude-plugins-official": true,
+    "basecamp@37signals": true
+  },
+  "extraKnownMarketplaces": {
+    "37signals": {
+      "source": {
+        "source": "github",
+        "repo": "basecamp/claude-plugins"
+      },
+      "autoUpdate": true
+    }
+  },
+  "theme": "dark",
+  "preferredNotifChannel": "terminal_bell",
+  "voiceEnabled": true
+}

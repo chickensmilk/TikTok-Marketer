@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Edit Signature</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+
+    .editor-root { display: flex; height: 100vh; }
+
+    /* Sidebar */
+    .sidebar {
+      width: 72px; flex-shrink: 0; background: #1e2742;
+      display: flex; flex-direction: column; align-items: center;
+      padding: 12px 0; gap: 2px; overflow-y: auto;
+    }
+    .sidebar-logo {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: #2e3d6b; display: flex; align-items: center;
+      justify-content: center; margin-bottom: 12px; flex-shrink: 0;
+    }
+    .sidebar-logo svg { width: 24px; height: 24px; }
+    .nav-btn {
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; width: 60px; padding: 10px 4px;
+      border-radius: 8px; cursor: pointer;
+      color: rgba(255,255,255,0.5); gap: 5px; font-size: 10px;
+      text-align: center; transition: all 0.15s;
+      border: none; background: transparent; user-select: none;
+    }
+    .nav-btn svg { width: 20px; height: 20px; flex-shrink: 0; }
+    .nav-btn:hover { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.85); }
+    .nav-btn.active { background: rgba(255,255,255,0.14); color: white; }
+
+    /* Panel */
+    .panel { width: 370px; flex-shrink: 0; background: #fff; border-right: 1px solid #e2e6ed; overflow-y: auto; }
+    .panel-tabs { display: flex; border-bottom: 1px solid #e2e6ed; position: sticky; top: 0; background: white; z-index: 10; }
+    .panel-tab { flex: 1; padding: 14px 8px; text-align: center; font-size: 12px; font-weight: 600; letter-spacing: 0.5px; text-transform: uppercase; color: #888; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.15s; }
+    .panel-tab.active { color: #0066CC; border-bottom-color: #0066CC; }
+    .panel-section { display: none; }
+    .panel-section.active { display: block; }
+    .section-block { padding: 18px 22px; border-bottom: 1px solid #f0f2f5; }
+    .section-title { font-size: 13px; font-weight: 600; color: #333; margin-bottom: 14px; }
+
+    .field-group { margin-bottom: 12px; }
+    .field-group:last-child { margin-bottom: 0; }
+    .field-label { font-size: 11px; font-weight: 600; color: #999; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; }
+    .field-row { display: flex; gap: 8px; }
+    .field-row .field-group { flex: 1; margin-bottom: 0; }
+
+    input[type="text"], input[type="email"], select {
+      width: 100%; padding: 8px 10px; border: 1px solid #dde1e7;
+      border-radius: 6px; font-size: 13px; color: #333; outline: none;
+      transition: border-color 0.15s, box-shadow 0.15s; background: white;
+    }
+    input:focus, select:focus { border-color: #0066CC; box-shadow: 0 0 0 3px rgba(0,102,204,0.1); }
+    input::placeholder { color: #bbb; }
+
+    /* Typography row */
+    .typo-row { display: grid; grid-template-columns: 1fr 56px 80px; gap: 6px; margin-bottom: 10px; }
+    .typo-row select { font-size: 12px; padding: 7px 6px; }
+    .typo-row input { font-size: 12px; padding: 7px 8px; }
+    .typo-label { font-size: 11px; font-weight: 600; color: #aaa; text-transform: uppercase; letter-spacing: 0.4px; margin-bottom: 4px; display: grid; grid-template-columns: 1fr 56px 80px; gap: 6px; }
+
+    /* Photo section */
+    .photo-wrap { background: #f7f8fa; border-radius: 8px; padding: 14px; text-align: center; margin-bottom: 12px; border: 1px solid #eee; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+    .photo-wrap img { max-width: 110px; max-height: 90px; object-fit: contain; }
+    .photo-placeholder { color: #ccc; font-size: 13px; }
+    .photo-actions { display: flex; gap: 8px; margin-bottom: 12px; }
+    .btn-ghost-blue { flex: 1; padding: 7px; border: 1px solid #0066CC; border-radius: 6px; color: #0066CC; background: white; font-size: 12px; cursor: pointer; font-weight: 500; }
+    .btn-ghost-blue:hover { background: #f0f6ff; }
+    .btn-ghost-red { flex: 1; padding: 7px; border: 1px solid #e53e3e; border-radius: 6px; color: #e53e3e; background: white; font-size: 12px; cursor: pointer; font-weight: 500; }
+    .btn-ghost-red:hover { background: #fff5f5; }
+
+    /* Toggle group */
+    .toggle-group { display: flex; gap: 6px; }
+    .toggle-btn { flex: 1; padding: 8px; border: 1px solid #dde1e7; border-radius: 6px; font-size: 12px; font-weight: 500; cursor: pointer; text-align: center; color: #555; background: white; transition: all 0.15s; }
+    .toggle-btn.active { background: #0066CC; color: white; border-color: #0066CC; }
+
+    /* Color row */
+    .color-row { display: flex; align-items: center; gap: 8px; }
+    .color-row input[type="color"] { width: 36px; height: 34px; border: 1px solid #dde1e7; border-radius: 6px; cursor: pointer; padding: 2px; flex-shrink: 0; }
+    .color-row input[type="text"] { flex: 1; }
+
+    /* Social row (kept for CSS compat) */
+    .social-row { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; }
+    .social-badge { width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; }
+    .social-badge svg { width: 15px; height: 15px; }
+    .social-row input { flex: 1; }
+
+    /* Info note */
+    .master-note {
+      background: #f0f6ff; border: 1px solid #c8dcf8; border-radius: 6px;
+      padding: 10px 14px; font-size: 12px; color: #2c5fa8; line-height: 1.5;
+      margin-bottom: 14px;
+    }
+    .master-note strong { font-weight: 600; }
+
+    /* Preview Pane */
+    .preview-pane { flex: 1; background: #edf0f7; display: flex; flex-direction: column; min-width: 0; }
+    .preview-header { background: #8094b4; color: white; padding: 13px 24px; font-size: 13px; font-weight: 500; flex-shrink: 0; }
+    .preview-body { flex: 1; overflow-y: auto; display: flex; align-items: flex-start; justify-content: center; padding: 40px 32px; }
+    .preview-card { background: white; border-radius: 4px; padding: 28px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); max-width: 680px; width: 100%; overflow-x: auto; }
+    .preview-footer { padding: 14px 24px; background: white; border-top: 1px solid #e2e6ed; display: flex; align-items: center; justify-content: space-between; flex-shrink: 0; }
+    .preview-footer a { color: #0066CC; font-size: 14px; text-decoration: none; }
+    .btn-save { background: #0066CC; color: white; border: none; border-radius: 6px; padding: 10px 28px; font-size: 14px; font-weight: 600; cursor: pointer; transition: background 0.15s; }
+    .btn-save:hover { background: #0055aa; }
+    .btn-save.saved { background: #0A8A4A; }
+
+    .toast { position: fixed; bottom: 24px; right: 24px; z-index: 999; background: #1e2742; color: white; padding: 12px 20px; border-radius: 8px; font-size: 14px; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+    .toast.show { opacity: 1; }
+  </style>
+</head>
+<body>
+<div class="editor-root">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="sidebar-logo">
+      <svg viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="1.8"><rect x="2" y="4" width="20" height="16" rx="2"/><polyline points="2,4 12,13 22,4"/></svg>
+    </div>
+    <button class="nav-btn active" onclick="switchSection('text',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M4 6h16M4 12h10M4 18h12"/></svg>
+      Text / Style
+    </button>
+    <button class="nav-btn" onclick="switchSection('image',this)">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><polyline points="21,15 16,10 5,21"/></svg>
+      Image
+    </button>
+  </aside>
+
+  <!-- Panel -->
+  <div class="panel">
+
+    <!-- TEXT / STYLE -->
+    <div class="panel-section active" id="section-text">
+      <div class="panel-tabs">
+        <div class="panel-tab active" onclick="switchTab('text','user',this)">User Details</div>
+        <div class="panel-tab" onclick="switchTab('text','design',this)">Design</div>
+      </div>
+      <div id="text-user">
+        <div class="section-block">
+          <div class="section-title">User info</div>
+          <div class="master-note">
+            <strong>Company phone, address, website, social icons and banner</strong> are managed in the
+            <a href="/" style="color:#2c5fa8;">Master Template on the dashboard</a>.
+          </div>
+          <div class="field-group"><div class="field-label">Name</div><input type="text" id="f-name" placeholder="Jane Smith" oninput="up()" /></div>
+          <div class="field-group"><div class="field-label">Title</div><input type="text" id="f-title" placeholder="Account Manager" oninput="up()" /></div>
+          <div class="field-group"><div class="field-label">Additional text</div><input type="text" id="f-additional" placeholder="Additional text" oninput="up()" /></div>
+          <div class="field-group"><div class="field-label">Department</div><input type="text" id="f-department" placeholder="Marketing" oninput="up()" /></div>
+        </div>
+        <div class="section-block">
+          <div class="section-title">Contact info</div>
+          <div class="field-row"><div class="field-group"><div class="field-label">Mobile label</div><input type="text" id="f-mobile-label" placeholder="m:" oninput="up()" /></div><div class="field-group"><div class="field-label">Mobile</div><input type="text" id="f-mobile" placeholder="555-987-6543" oninput="up()" /></div></div>
+          <div class="field-group" style="margin-top:10px"><div class="field-label">Email</div><input type="email" id="f-email" placeholder="jane@company.com" oninput="up()" /></div>
+        </div>
+      </div>
+      <div id="text-design" style="display:none">
+        <div class="section-block">
+          <div class="section-title">Colors</div>
+          <div class="field-group">
+            <div class="field-label">Label color (m: p: a: w:)</div>
+            <div class="color-row">
+              <input type="color" id="f-label-color-picker" value="#F6921C" oninput="s('f-label-color',this.value);up()" />
+              <input type="text" id="f-label-color" value="#F6921C" placeholder="#F6921C" oninput="syncPicker('f-label-color','f-label-color-picker');up()" />
+            </div>
+          </div>
+          <div class="field-group">
+            <div class="field-label">Company &amp; link color</div>
+            <div class="color-row">
+              <input type="color" id="f-company-color-picker" value="#26A9E1" oninput="s('f-company-color',this.value);up()" />
+              <input type="text" id="f-company-color" value="#26A9E1" placeholder="#26A9E1" oninput="syncPicker('f-company-color','f-company-color-picker');up()" />
+            </div>
+          </div>
+        </div>
+        <div class="section-block">
+          <div class="section-title">Typography</div>
+          <div class="typo-label"><span>Field</span><span>Size</span><span>Weight</span></div>
+
+          <div style="margin-bottom:6px;font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;">Name</div>
+          <div class="typo-row">
+            <select id="f-name-font" onchange="up()"><option>Tahoma</option><option>Arial</option><option>Helvetica</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option><option>Trebuchet MS</option><option>Calibri</option></select>
+            <input type="text" id="f-name-size" value="18" oninput="up()" />
+            <select id="f-name-weight" onchange="up()"><option value="400">Normal</option><option value="500">Medium</option><option value="600">Semi-Bold</option><option value="700" selected>Bold</option></select>
+          </div>
+
+          <div style="margin-bottom:6px;font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;">Title</div>
+          <div class="typo-row">
+            <select id="f-title-font" onchange="up()"><option>Tahoma</option><option>Arial</option><option>Helvetica</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option><option>Trebuchet MS</option><option>Calibri</option></select>
+            <input type="text" id="f-title-size" value="15" oninput="up()" />
+            <select id="f-title-weight" onchange="up()"><option value="400" selected>Normal</option><option value="500">Medium</option><option value="600">Semi-Bold</option><option value="700">Bold</option></select>
+          </div>
+
+          <div style="margin-bottom:6px;font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;">Company</div>
+          <div class="typo-row">
+            <select id="f-company-font" onchange="up()"><option>Tahoma</option><option>Arial</option><option>Helvetica</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option><option>Trebuchet MS</option><option>Calibri</option></select>
+            <input type="text" id="f-company-size" value="16" oninput="up()" />
+            <select id="f-company-weight" onchange="up()"><option value="400">Normal</option><option value="500">Medium</option><option value="600">Semi-Bold</option><option value="700" selected>Bold</option></select>
+          </div>
+
+          <div style="margin-bottom:6px;font-size:11px;color:#999;font-weight:600;text-transform:uppercase;letter-spacing:0.3px;">Contact info</div>
+          <div class="typo-row">
+            <select id="f-contact-font" onchange="up()"><option>Tahoma</option><option>Arial</option><option>Helvetica</option><option>Verdana</option><option>Georgia</option><option>Times New Roman</option><option>Trebuchet MS</option><option>Calibri</option></select>
+            <input type="text" id="f-contact-size" value="14" oninput="up()" style="grid-column:span 2" />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- IMAGE -->
+    <div class="panel-section" id="section-image">
+      <div class="section-block" style="padding-top:22px">
+        <div class="section-title">Photo</div>
+        <div class="photo-wrap" id="photo-wrap"><span class="photo-placeholder">No photo set</span></div>
+        <div class="photo-actions">
+          <button class="btn-ghost-red" onclick="clearPhoto()">Delete</button>
+          <button class="btn-ghost-blue" onclick="gf('f-photo-url').focus()">Replace image</button>
+        </div>
+        <div class="field-group">
+          <div class="field-label">Photo URL</div>
+          <input type="text" id="f-photo-url" placeholder="https://company.com/photo.jpg" oninput="prevPhoto(this.value);up()" />
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /panel -->
+
+  <!-- Preview -->
+  <div class="preview-pane">
+    <div class="preview-header">Signature preview</div>
+    <div class="preview-body">
+      <div class="preview-card"><div id="sig-preview"></div></div>
+    </div>
+    <div class="preview-footer">
+      <a href="/">&larr; Back to dashboard</a>
+      <button class="btn-save" id="save-btn" onclick="save()">Save to dashboard</button>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script src="/sig-builder.js"></script>
+<script>
+  const empId = location.pathname.split('/').pop();
+  let settings = {};
+
+  // Helpers
+  const gf = id => document.getElementById(id);
+  const s  = (id, v) => { const el = gf(id); if (el) el.value = v || ''; };
+  const g  = id => (gf(id)?.value || '').trim();
+
+  function syncPicker(textId, pickerId) {
+    const v = g(textId);
+    if (/^#[0-9a-f]{6}$/i.test(v)) gf(pickerId).value = v;
+  }
+
+  function switchSection(name, btn) {
+    document.querySelectorAll('.panel-section').forEach(x => x.classList.remove('active'));
+    document.querySelectorAll('.nav-btn').forEach(x => x.classList.remove('active'));
+    gf('section-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function switchTab(section, tab, el) {
+    el.parentElement.querySelectorAll('.panel-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    if (section === 'text') {
+      gf('text-user').style.display   = tab === 'user'   ? 'block' : 'none';
+      gf('text-design').style.display = tab === 'design' ? 'block' : 'none';
+    }
+  }
+
+  // Photo preview
+  function prevPhoto(url) {
+    const wrap = gf('photo-wrap');
+    const shape = settings?.photo_shape || 'circle';
+    wrap.innerHTML = url && url.startsWith('http')
+      ? `<img src="${url}" style="max-width:120px;max-height:100px;border-radius:${shape === 'circle' ? '50%' : '4px'};" onerror="this.parentElement.innerHTML='<span class=\\'photo-placeholder\\'>Cannot load</span>'" />`
+      : '<span class="photo-placeholder">No photo set</span>';
+  }
+
+  function clearPhoto() { s('f-photo-url', ''); prevPhoto(''); up(); }
+
+  // Collect form data
+  function getData() {
+    return {
+      name: g('f-name'), title: g('f-title'), additional_text: g('f-additional'),
+      department: g('f-department'), email: g('f-email'),
+      mobile_label: g('f-mobile-label') || 'm:', mobile: g('f-mobile'),
+      label_color: g('f-label-color') || '#F6921C',
+      company_color: g('f-company-color') || '#26A9E1',
+      accent_color: g('f-company-color') || '#26A9E1',
+      photo_url: g('f-photo-url'),
+      name_font: g('f-name-font') || 'Tahoma',
+      name_size: parseInt(g('f-name-size')) || 18,
+      name_weight: g('f-name-weight') || '700',
+      title_font: g('f-title-font') || 'Tahoma',
+      title_size: parseInt(g('f-title-size')) || 15,
+      title_weight: g('f-title-weight') || '400',
+      company_font: g('f-company-font') || 'Tahoma',
+      company_size: parseInt(g('f-company-size')) || 16,
+      company_weight: g('f-company-weight') || '700',
+      contact_font: g('f-contact-font') || 'Tahoma',
+      contact_size: parseInt(g('f-contact-size')) || 14,
+    };
+  }
+
+  // Live preview
+  function up() {
+    const html = buildSig(getData(), settings, location.origin);
+    gf('sig-preview').innerHTML = html;
+    window._sigHTML = html;
+  }
+
+  // Load employee
+  async function load() {
+    const [er, sr] = await Promise.all([
+      fetch(`/api/employees/${empId}`),
+      fetch('/api/settings')
+    ]);
+    if (!er.ok) { alert('Employee not found'); location.href = '/'; return; }
+    const e = await er.json();
+    settings = await sr.json();
+    document.title = `Edit \u2014 ${e.name}`;
+
+    s('f-name', e.name); s('f-title', e.title); s('f-additional', e.additional_text);
+    s('f-department', e.department); s('f-email', e.email);
+    s('f-mobile-label', e.mobile_label || 'm:'); s('f-mobile', e.mobile);
+    s('f-photo-url', e.photo_url);
+
+    // Colors
+    const lc = e.label_color || '#F6921C';
+    const cc = e.company_color || e.accent_color || '#26A9E1';
+    s('f-label-color', lc); gf('f-label-color-picker').value = lc;
+    s('f-company-color', cc); gf('f-company-color-picker').value = cc;
+
+    // Typography
+    s('f-name-font', e.name_font || 'Tahoma');
+    s('f-name-size', e.name_size || 18);
+    gf('f-name-weight').value = e.name_weight || '700';
+    s('f-title-font', e.title_font || 'Tahoma');
+    s('f-title-size', e.title_size || 15);
+    gf('f-title-weight').value = e.title_weight || '400';
+    s('f-company-font', e.company_font || 'Tahoma');
+    s('f-company-size', e.company_size || 16);
+    gf('f-company-weight').value = e.company_weight || '700';
+    s('f-contact-font', e.contact_font || 'Tahoma');
+    s('f-contact-size', e.contact_size || 14);
+
+    if (e.photo_url) prevPhoto(e.photo_url);
+
+    up();
+  }
+
+  // Save
+  async function save() {
+    const btn = gf('save-btn');
+    btn.textContent = 'Saving\u2026';
+    const token = sessionStorage.getItem('adminToken') || '';
+    await fetch(`/api/employees/${empId}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json', 'x-admin-token': token },
+      body: JSON.stringify(getData())
+    });
+    btn.textContent = '\u2713 Saved!'; btn.classList.add('saved');
+    setTimeout(() => { btn.textContent = 'Save to dashboard'; btn.classList.remove('saved'); }, 2500);
+    showToast('Signature saved.');
+  }
+
+  function showToast(msg) {
+    const t = gf('toast'); t.textContent = msg; t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2500);
+  }
+
+  load();
+</script>
+</body>
+</html>

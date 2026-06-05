@@ -1,0 +1,16 @@
+{
+  "name": "instapage-unpublish",
+  "version": "1.0.0",
+  "description": "Bulk unpublish Instapage landing pages from a Google Sheet",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "publish": "node publish-server.js",
+    "cli": "node unpublish.js",
+    "install-browsers": "npx playwright install chromium"
+  },
+  "dependencies": {
+    "express": "^4.19.2",
+    "playwright": "^1.44.0"
+  }
+}

@@ -1,0 +1,1 @@
+window.io_global_object_name="iovation",window.iovation=window.iovation||{enable_flash:!1,bbout_element_id:"ioBlackBox",loader:{version:"general5"},enable_atrip:!1};

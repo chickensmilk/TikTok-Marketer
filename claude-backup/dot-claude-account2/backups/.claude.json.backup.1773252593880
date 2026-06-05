@@ -1,0 +1,155 @@
+{
+  "numStartups": 1,
+  "installMethod": "native",
+  "autoUpdates": false,
+  "customApiKeyResponses": {
+    "approved": [
+      "TcYGpDePXrA-MHmKvAAA"
+    ],
+    "rejected": []
+  },
+  "tipsHistory": {
+    "new-user-warmup": 1,
+    "plan-mode-for-complex-tasks": 1,
+    "memory-command": 1,
+    "theme-command": 1,
+    "status-line": 1,
+    "prompt-queue": 1,
+    "enter-to-steer-in-relatime": 1,
+    "todo-list": 1,
+    "install-github-app": 1,
+    "install-slack-app": 1,
+    "drag-and-drop-images": 1,
+    "paste-images-mac": 1
+  },
+  "cachedGrowthBookFeatures": {
+    "tengu_herring_clock": false,
+    "tengu_event_sampling_config": {},
+    "tengu_frond_boric": {},
+    "tengu_log_segment_events": false,
+    "tengu_log_datadog_events": true,
+    "tengu_cicada_nap_ms": 0,
+    "tengu_miraculo_the_bard": false,
+    "tengu_miraculo_the_bard2": false,
+    "tengu_kairos_cron": true,
+    "tengu_paper_halyard": false,
+    "tengu_chomp_inflection": false,
+    "tengu_penguins_off": null,
+    "tengu_granite_whisper": false,
+    "tengu_desktop_upsell": {
+      "enable_shortcut_tip": true,
+      "enable_startup_dialog": false
+    },
+    "tengu_streaming_text": true,
+    "tengu-top-of-feed-tip": {
+      "tip": "",
+      "color": ""
+    },
+    "tengu_marble_whisper": true,
+    "tengu_turtle_carbon": true,
+    "tengu_pr_status_cli": true,
+    "tengu_ccr_bridge": false,
+    "tengu_keybinding_customization_release": true,
+    "tengu_post_compact_survey": false,
+    "tengu_quiet_hollow": true,
+    "tengu_marble_anvil": true,
+    "tengu_tool_pear": false,
+    "tengu_scarf_coffee": false,
+    "tengu_claudeai_mcp_connectors": true,
+    "tengu_scratch": false,
+    "tengu_1p_event_batch_config": {
+      "scheduledDelayMillis": 10000,
+      "maxExportBatchSize": 400,
+      "maxQueueSize": 8192,
+      "path": "/api/event_logging/v2/batch"
+    },
+    "tengu_grey_wool": true,
+    "tengu_auto_mode_config": {
+      "enabled": "disabled"
+    },
+    "tengu_disable_bypass_permissions_mode": false,
+    "tengu_pid_based_version_locking": true,
+    "tengu_kairos_brief_config": {
+      "enable_slash_command": false
+    },
+    "tengu_amber_quartz": true,
+    "tengu_thinkback": false,
+    "tengu_tangerine_ladder_boost": true,
+    "tengu_glacier_2xr": false,
+    "tengu_basalt_3kr": false,
+    "enhanced_telemetry_beta": false,
+    "tengu_swinburne_dune": false,
+    "tengu_coral_fern": true,
+    "tengu_bergotte_lantern": false,
+    "tengu_sotto_voce": true,
+    "tengu_system_prompt_global_cache": true,
+    "tengu_streaming_tool_execution2": true,
+    "tengu_moth_copse": false,
+    "tengu_tool_search_unsupported_models": [
+      "haiku"
+    ],
+    "tengu_defer_all_bn4": false,
+    "tengu_fgts": false,
+    "tengu_toolref_defer_j8m": false,
+    "tengu_tst_hint_m7r": false,
+    "tengu_attribution_header": true,
+    "tengu_pebble_leaf_prune": false,
+    "tengu_session_memory": false
+  },
+  "firstStartTime": "2026-03-11T17:18:54.775Z",
+  "opusProMigrationComplete": true,
+  "sonnet1m45MigrationComplete": true,
+  "userID": "3634608248983ffef0a61fe94bd7d484fb9ec8159c5ab02c55b1438e536d5944",
+  "cachedChromeExtensionInstalled": true,
+  "changelogLastFetched": 1773249535083,
+  "oauthAccount": {
+    "accountUuid": "8ec44435-22b4-4659-92d4-1b7ec31cecb3",
+    "emailAddress": "richardvargasdesigns@gmail.com",
+    "organizationUuid": "0a7eecb5-c711-42db-a462-6707d9b023b6",
+    "hasExtraUsageEnabled": false,
+    "billingType": "prepaid",
+    "accountCreatedAt": "2026-01-10T16:34:17.574211Z",
+    "subscriptionCreatedAt": "2026-02-05T01:32:17.876690Z",
+    "displayName": "Rich",
+    "organizationRole": "admin",
+    "workspaceRole": "workspace_developer",
+    "organizationName": "Rich‘s Individual Org"
+  },
+  "appleTerminalSetupInProgress": false,
+  "appleTerminalBackupPath": "/Users/richardvargas/Library/Preferences/com.apple.Terminal.plist.bak",
+  "optionAsMetaKeyInstalled": true,
+  "hasCompletedOnboarding": true,
+  "lastOnboardingVersion": "2.1.72",
+  "clientDataCache": {
+    "data": null,
+    "timestamp": 1773249651544
+  },
+  "lastReleaseNotesSeen": "2.1.72",
+  "projects": {
+    "/Users/richardvargas": {
+      "allowedTools": [],
+      "mcpContextUris": [],
+      "mcpServers": {},
+      "enabledMcpjsonServers": [],
+      "disabledMcpjsonServers": [],
+      "hasTrustDialogAccepted": false,
+      "projectOnboardingSeenCount": 1,
+      "hasClaudeMdExternalIncludesApproved": false,
+      "hasClaudeMdExternalIncludesWarningShown": false,
+      "exampleFiles": []
+    }
+  },
+  "penguinModeOrgEnabled": false,
+  "subscriptionNoticeCount": 1,
+  "autoUpdatesProtectedForNative": true,
+  "officialMarketplaceAutoInstallAttempted": true,
+  "officialMarketplaceAutoInstalled": true,
+  "metricsStatusCache": {
+    "enabled": true,
+    "vcsAccountLinkingEnabled": false,
+    "timestamp": 1773249951685
+  },
+  "feedbackSurveyState": {
+    "lastShownTime": 1773252211630
+  }
+}

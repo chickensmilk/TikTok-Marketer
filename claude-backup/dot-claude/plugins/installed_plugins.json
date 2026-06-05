@@ -1,0 +1,26 @@
+{
+  "version": 2,
+  "plugins": {
+    "figma@claude-plugins-official": [
+      {
+        "scope": "project",
+        "projectPath": "/Users/richardvargas",
+        "installPath": "/Users/richardvargas/.claude/plugins/cache/claude-plugins-official/figma/2.2.12",
+        "version": "2.2.12",
+        "installedAt": "2026-03-03T05:06:30.928Z",
+        "lastUpdated": "2026-05-19T12:33:02.668Z",
+        "gitCommitSha": "46a7d1bec64e0fd016eea6a66eda8ac34b44c491"
+      }
+    ],
+    "basecamp@37signals": [
+      {
+        "scope": "user",
+        "installPath": "/Users/richardvargas/.claude/plugins/cache/37signals/basecamp/0.7.2",
+        "version": "0.7.2",
+        "installedAt": "2026-04-01T03:14:52.900Z",
+        "lastUpdated": "2026-04-01T03:14:52.900Z",
+        "gitCommitSha": "4c6860be033f9f7b4ade38076ce00bcd976f85fa"
+      }
+    ]
+  }
+}

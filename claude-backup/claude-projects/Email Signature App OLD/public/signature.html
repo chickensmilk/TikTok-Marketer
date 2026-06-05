@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Your Email Signature</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      background: #f0f2f5;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #1a1a2e;
+      color: white;
+      padding: 0 32px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    header h1 { font-size: 17px; font-weight: 600; }
+    header a { color: rgba(255,255,255,0.6); font-size: 13px; text-decoration: none; }
+    header a:hover { color: white; }
+
+    .container { max-width: 800px; margin: 0 auto; padding: 40px 24px; }
+
+    .card {
+      background: white; border-radius: 12px;
+      box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+      overflow: hidden; margin-bottom: 24px;
+    }
+
+    .card-header {
+      padding: 20px 24px;
+      border-bottom: 1px solid #f0f0f0;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+
+    .card-header h2 { font-size: 15px; font-weight: 600; }
+    .card-body { padding: 24px; }
+
+    .instructions {
+      background: #f0f6ff; border-left: 4px solid #0066CC;
+      border-radius: 6px; padding: 16px 20px;
+      font-size: 14px; line-height: 1.7; color: #444;
+      margin-bottom: 24px;
+    }
+
+    .instructions strong { color: #0066CC; }
+
+    .tabs { display: flex; gap: 8px; margin-bottom: 20px; }
+    .tab {
+      padding: 8px 16px; border-radius: 6px; font-size: 13px;
+      font-weight: 500; cursor: pointer; border: 1px solid #dde1e7;
+      background: white; color: #555; transition: all 0.15s;
+    }
+    .tab.active { background: #0066CC; color: white; border-color: #0066CC; }
+
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* Signature preview */
+    #sig-preview {
+      border: 1px solid #eee; border-radius: 8px;
+      padding: 20px; background: white;
+    }
+
+    /* HTML source */
+    .code-box {
+      background: #1e1e2e; color: #cdd6f4;
+      border-radius: 8px; padding: 20px;
+      font-family: 'Courier New', monospace;
+      font-size: 12px; line-height: 1.6;
+      overflow-x: auto; white-space: pre-wrap;
+      word-break: break-all; max-height: 300px;
+      overflow-y: auto;
+    }
+
+    .copy-btns { display: flex; gap: 10px; margin-top: 16px; flex-wrap: wrap; }
+
+    .btn {
+      padding: 10px 20px; border: none; border-radius: 7px;
+      cursor: pointer; font-size: 14px; font-weight: 500;
+      transition: all 0.15s; display: flex; align-items: center; gap: 6px;
+    }
+    .btn-primary { background: #0066CC; color: white; }
+    .btn-primary:hover { background: #0055aa; }
+    .btn-success { background: #0A8A4A; color: white; }
+    .btn-outline { background: white; color: #333; border: 1px solid #dde1e7; }
+    .btn-outline:hover { background: #f7f8fa; }
+    .btn.copied { background: #d4edda; color: #1a7a3a; }
+
+    .not-found {
+      text-align: center; padding: 80px 20px; color: #aaa;
+    }
+    .not-found h2 { font-size: 22px; margin-bottom: 10px; color: #555; }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>✉ Email Signature</h1>
+  <a href="/">← Back to Admin</a>
+</header>
+
+<div class="container">
+  <div id="main-content">
+    <div style="text-align:center;padding:60px;color:#aaa">Loading…</div>
+  </div>
+</div>
+
+<script src="/sig-builder.js"></script>
+<script>
+  const id = location.pathname.split('/').pop();
+
+  async function load() {
+    const [empRes, settingsRes] = await Promise.all([
+      fetch(`/api/employees/${id}`),
+      fetch('/api/settings')
+    ]);
+
+    if (!empRes.ok) {
+      document.getElementById('main-content').innerHTML = `
+        <div class="not-found">
+          <h2>Signature not found</h2>
+          <p>This link may be invalid or the employee may have been removed.</p>
+        </div>`;
+      return;
+    }
+
+    const settings = await settingsRes.json();
+    const e = await empRes.json();
+    document.title = `${e.name} — Email Signature`;
+    const baseUrl = location.origin;
+    const sigHTML = buildSig(e, settings, baseUrl);
+
+    document.getElementById('main-content').innerHTML = `
+      <div class="instructions">
+        <strong>Hi ${e.name.split(' ')[0]}!</strong> Your email signature is ready.<br/>
+        Use the <strong>Copy Signature</strong> button and paste it directly into your email client's signature settings.
+        For Gmail: Settings → See all settings → General → Signature.
+        For Outlook: File → Options → Mail → Signatures.
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2>${e.name}'s Signature</h2>
+        </div>
+        <div class="card-body">
+          <div class="tabs">
+            <div class="tab active" onclick="switchTab('preview')">Preview</div>
+            <div class="tab" onclick="switchTab('html')">HTML Source</div>
+          </div>
+
+          <div class="tab-panel active" id="tab-preview">
+            <div id="sig-preview">${sigHTML}</div>
+          </div>
+
+          <div class="tab-panel" id="tab-html">
+            <div class="code-box" id="html-source"></div>
+          </div>
+
+          <div class="copy-btns">
+            <button class="btn btn-primary" id="copy-sig-btn" onclick="copySignature()">
+              📋 Copy Signature
+            </button>
+            <button class="btn btn-outline" onclick="copyHTML()">
+              &lt;/&gt; Copy HTML
+            </button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // Set raw HTML in code box
+    document.getElementById('html-source').textContent = sigHTML;
+    window._sigHTML = sigHTML;
+  }
+
+  function switchTab(name) {
+    document.querySelectorAll('.tab').forEach((t, i) => {
+      t.classList.toggle('active', (i === 0 && name === 'preview') || (i === 1 && name === 'html'));
+    });
+    document.getElementById('tab-preview').classList.toggle('active', name === 'preview');
+    document.getElementById('tab-html').classList.toggle('active', name === 'html');
+  }
+
+  async function copySignature() {
+    const el = document.getElementById('sig-preview');
+    const btn = document.getElementById('copy-sig-btn');
+
+    try {
+      // Copy as rich HTML (preserves formatting in email clients)
+      const blob = new Blob([window._sigHTML], { type: 'text/html' });
+      const clipItem = new ClipboardItem({ 'text/html': blob });
+      await navigator.clipboard.write([clipItem]);
+    } catch {
+      // Fallback: select the rendered element
+      const range = document.createRange();
+      range.selectNodeContents(el);
+      const sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+      document.execCommand('copy');
+      sel.removeAllRanges();
+    }
+
+    btn.textContent = '✓ Copied!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 Copy Signature'; btn.classList.remove('copied'); }, 2500);
+  }
+
+  function copyHTML() {
+    navigator.clipboard.writeText(window._sigHTML).then(() => {
+      showToast('HTML copied to clipboard');
+    });
+  }
+
+  function showToast(msg) {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = 'position:fixed;bottom:24px;right:24px;background:#1a1a2e;color:white;padding:12px 20px;border-radius:8px;font-size:14px;z-index:999;';
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+  }
+
+  load();
+</script>
+</body>
+</html>

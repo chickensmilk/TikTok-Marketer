@@ -1,0 +1,138 @@
+[2026-05-20T14:04:35.509Z] [supervisor] ─── daemon start ─── version=2.1.139 pid=67504 origin=transient
+[2026-05-20T14:04:35.539Z] [supervisor] auth: scheduling proactive refresh in 13945s
+[2026-05-20T14:04:35.539Z] [supervisor] auth: scheduling proactive refresh in 13945s
+[2026-05-20T14:04:35.549Z] [supervisor] workers=0
+[2026-05-20T14:04:35.757Z] [bg] bg spawned 3cab08e0 (spare)
+[2026-05-20T14:04:35.762Z] [bg] bg spare spawned host pid=67534
+[2026-05-20T14:05:35.552Z] [supervisor] binary at /Users/richardvargas/.local/bin/claude changed (/Users/richardvargas/.local/share/claude/versions/2.1.139 → /Users/richardvargas/.local/share/claude/versions/2.1.145) — self-restarting for upgrade
+[2026-05-20T14:05:35.554Z] [supervisor] shutting down
+[2026-05-20T14:05:40.010Z] [supervisor] ─── daemon start ─── version=2.1.145 pid=70208 origin=transient
+[2026-05-20T14:05:40.030Z] [supervisor] auth: scheduling proactive refresh in 13880s
+[2026-05-20T14:05:40.031Z] [supervisor] auth: scheduling proactive refresh in 13880s
+[2026-05-20T14:05:40.037Z] [supervisor] workers=0
+[2026-05-20T14:05:40.055Z] [bg] bg adopt: adopted=1 respawned=0 dead=0
+[2026-05-20T14:05:40.062Z] [bg] bg spare spawned host pid=70414
+[2026-05-20T14:11:32.739Z] [bg] bg claimed-spare ae7f6b47 (slash)
+[2026-05-20T14:11:32.748Z] [bg] bg spare spawned host pid=86353
+[2026-05-20T14:12:29.522Z] [bg] bg settled 3cab08e0 (killed)
+[2026-05-20T14:12:37.425Z] [bg] bg claimed-spare 2a626e10 (spare)
+[2026-05-20T14:12:37.435Z] [bg] bg spare spawned host pid=86931
+[2026-05-20T14:23:26.014Z] [bg] bg claimed-spare f5a7c215 (spare)
+[2026-05-20T14:23:26.023Z] [bg] bg spare spawned host pid=87379
+[2026-05-20T15:24:17.449Z] [bg] bg settled f5a7c215 (done)
+[2026-05-20T17:57:00.258Z] [supervisor] auth: proactive refresh starting
+[2026-05-20T17:57:00.767Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-20T17:57:00.767Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-21T02:01:17.480Z] [supervisor] auth: proactive refresh starting
+[2026-05-21T02:01:19.249Z] [supervisor] auth: scheduling proactive refresh in 28559s
+[2026-05-21T02:01:19.249Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-21T03:02:17.316Z] [supervisor] binary at /Users/richardvargas/.local/bin/claude changed (/Users/richardvargas/.local/share/claude/versions/2.1.145 → /Users/richardvargas/.local/share/claude/versions/2.1.146) — self-restarting for upgrade
+[2026-05-21T03:02:17.383Z] [supervisor] shutting down
+[2026-05-21T03:02:52.592Z] [supervisor] ─── daemon start ─── version=2.1.146 pid=99297 origin=transient
+[2026-05-21T03:02:52.592Z] [supervisor] ─── daemon start ─── version=2.1.146 pid=99294 origin=transient
+[2026-05-21T03:02:52.674Z] [supervisor] auth: scheduling proactive refresh in 24866s
+[2026-05-21T03:02:52.680Z] [supervisor] another daemon won the lock race (pid=99297) — exiting
+[2026-05-21T03:02:52.680Z] [supervisor] auth: scheduling proactive refresh in 24866s
+[2026-05-21T03:02:52.886Z] [supervisor] workers=0
+[2026-05-21T03:02:53.256Z] [bg] bg adopt: adopted=2 respawned=0 dead=0
+[2026-05-21T03:02:53.321Z] [bg] bg spare spawned host pid=99388
+[2026-05-21T10:00:59.333Z] [supervisor] auth: proactive refresh starting
+[2026-05-21T10:01:00.745Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-21T10:01:00.745Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-21T12:29:14.908Z] [bg] bg settled 2a626e10 (done)
+[2026-05-21T17:57:00.617Z] [supervisor] auth: proactive refresh starting
+[2026-05-21T17:57:01.114Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-21T17:57:01.114Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-22T01:53:01.052Z] [supervisor] auth: proactive refresh starting
+[2026-05-22T01:53:01.660Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-22T01:53:01.660Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-22T09:51:07.784Z] [supervisor] auth: proactive refresh starting
+[2026-05-22T09:51:10.936Z] [supervisor] auth: scheduling proactive refresh in 28559s
+[2026-05-22T09:51:10.936Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-22T17:47:09.509Z] [supervisor] auth: proactive refresh starting
+[2026-05-22T17:47:09.644Z] [supervisor] auth: scheduling proactive refresh in 28537s
+[2026-05-22T17:47:09.644Z] [supervisor] auth: token still valid (cross-process refresh or not yet due)
+[2026-05-22T18:51:49.579Z] [bg] bg claimed-spare effab80e (spare)
+[2026-05-22T18:51:49.605Z] [bg] bg spare spawned host pid=2547
+[2026-05-22T18:52:25.729Z] [supervisor] binary at /Users/richardvargas/.local/bin/claude changed (/Users/richardvargas/.local/share/claude/versions/2.1.146 → /Users/richardvargas/.local/share/claude/versions/2.1.148) — self-restarting for upgrade
+[2026-05-22T18:52:25.748Z] [supervisor] shutting down
+[2026-05-22T18:52:29.686Z] [supervisor] ─── daemon start ─── version=2.1.148 pid=2611 origin=transient
+[2026-05-22T18:52:29.705Z] [supervisor] auth: scheduling proactive refresh in 24617s
+[2026-05-22T18:52:29.705Z] [supervisor] auth: scheduling proactive refresh in 24617s
+[2026-05-22T18:52:29.711Z] [supervisor] workers=0
+[2026-05-22T18:52:29.727Z] [bg] bg adopt: adopted=2 respawned=0 dead=0
+[2026-05-22T18:52:29.727Z] [bg] bg orphan-spare reap: 1
+[2026-05-22T18:52:29.731Z] [bg] bg spare spawned host pid=2622
+[2026-05-22T19:52:29.924Z] [bg] bg settled effab80e (done)
+[2026-05-23T01:51:46.345Z] [supervisor] auth: proactive refresh starting
+[2026-05-23T01:51:46.984Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-23T01:51:46.984Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-23T10:00:59.193Z] [supervisor] auth: proactive refresh starting
+[2026-05-23T10:00:59.363Z] [supervisor] auth: scheduling proactive refresh in 27716s
+[2026-05-23T10:00:59.363Z] [supervisor] auth: token still valid (cross-process refresh or not yet due)
+[2026-05-23T17:57:16.182Z] [supervisor] auth: proactive refresh starting
+[2026-05-23T17:57:16.847Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-23T17:57:16.847Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-24T02:07:44.209Z] [supervisor] auth: proactive refresh starting
+[2026-05-24T02:07:45.143Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-24T02:07:45.143Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-24T10:18:58.084Z] [supervisor] auth: proactive refresh starting
+[2026-05-24T10:18:59.193Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-24T10:18:59.193Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-24T18:37:58.069Z] [supervisor] auth: proactive refresh starting
+[2026-05-24T18:37:58.833Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-24T18:37:58.833Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-25T02:50:58.998Z] [supervisor] auth: proactive refresh starting
+[2026-05-25T02:50:59.804Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-25T02:50:59.804Z] [supervisor] auth: proactive refresh succeeded
+[2026-05-25T11:04:00.040Z] [supervisor] auth: proactive refresh starting
+[2026-05-25T11:04:02.160Z] [supervisor] auth: scheduling proactive refresh in 28560s
+[2026-05-25T11:04:02.160Z] [supervisor] auth: proactive refresh succeeded
+[2026-06-01T13:58:54.878Z] [supervisor] ─── daemon start ─── version=2.1.148 pid=45911 origin=transient
+[2026-06-01T13:58:54.901Z] [supervisor] auth: scheduling proactive refresh in 7786s
+[2026-06-01T13:58:54.902Z] [supervisor] auth: scheduling proactive refresh in 7786s
+[2026-06-01T13:58:54.916Z] [supervisor] workers=0
+[2026-06-01T13:58:54.924Z] [bg] bg adopt: adopted=0 respawned=0 dead=1
+[2026-06-01T13:58:54.982Z] [bg] bg spare spawned host pid=45916
+[2026-06-01T13:58:55.126Z] [bg] bg claimed-spare 4973c9dc (spare)
+[2026-06-01T13:58:55.128Z] [bg] bg spare spawned host pid=45939
+[2026-06-01T13:59:02.653Z] [bg] bg claimed-spare 2c0b72c2 (spare)
+[2026-06-01T13:59:02.656Z] [bg] bg spare spawned host pid=45977
+[2026-06-01T13:59:54.920Z] [supervisor] binary at /Users/richardvargas/.local/bin/claude changed (/Users/richardvargas/.local/share/claude/versions/2.1.148 → /Users/richardvargas/.local/share/claude/versions/2.1.159) — self-restarting for upgrade
+[2026-06-01T13:59:54.921Z] [supervisor] shutting down
+[2026-06-01T13:59:59.259Z] [supervisor] ─── daemon start ─── version=2.1.159 pid=46093 origin=transient
+[2026-06-01T13:59:59.279Z] [supervisor] auth: scheduling proactive refresh in 7721s
+[2026-06-01T13:59:59.280Z] [supervisor] auth: scheduling proactive refresh in 7721s
+[2026-06-01T13:59:59.288Z] [supervisor] workers=0
+[2026-06-01T13:59:59.304Z] [bg] bg adopt: adopted=2 respawned=0 dead=0
+[2026-06-01T13:59:59.304Z] [bg] bg orphan-spare reap: 1
+[2026-06-01T13:59:59.309Z] [bg] bg spare spawned host pid=46104
+[2026-06-01T14:33:37.690Z] [bg] bg settled 2c0b72c2 (killed)
+[2026-06-01T15:33:59.721Z] [bg] bg settled 4973c9dc (done)
+[2026-06-01T15:34:04.722Z] [supervisor] idle 5s with no clients — exiting
+[2026-06-01T15:34:04.723Z] [supervisor] shutting down
+[2026-06-02T18:40:07.701Z] [supervisor] ─── daemon start ─── version=2.1.159 pid=85452 origin=transient
+[2026-06-02T18:40:07.725Z] [supervisor] auth: scheduling proactive refresh in 22046s
+[2026-06-02T18:40:07.725Z] [supervisor] auth: scheduling proactive refresh in 22046s
+[2026-06-02T18:40:07.733Z] [supervisor] workers=0
+[2026-06-02T18:40:07.828Z] [bg] bg spare spawned host pid=85485
+[2026-06-02T18:40:07.944Z] [bg] bg claimed-spare 3f9d8261 (spare)
+[2026-06-02T18:40:07.949Z] [bg] bg spare spawned host pid=85489
+[2026-06-02T18:40:09.764Z] [bg] bg claimed-spare 63335f0f (spare)
+[2026-06-02T18:40:09.766Z] [bg] bg spare spawned host pid=85514
+[2026-06-02T18:41:07.739Z] [supervisor] binary at /Users/richardvargas/.local/bin/claude changed (/Users/richardvargas/.local/share/claude/versions/2.1.159 → /Users/richardvargas/.local/share/claude/versions/2.1.161) — self-restarting for upgrade
+[2026-06-02T18:41:07.741Z] [supervisor] shutting down
+[2026-06-02T18:41:12.174Z] [supervisor] ─── daemon start ─── version=2.1.161 pid=85592 origin=transient
+[2026-06-02T18:41:12.195Z] [supervisor] auth: scheduling proactive refresh in 21982s
+[2026-06-02T18:41:12.196Z] [supervisor] auth: scheduling proactive refresh in 21982s
+[2026-06-02T18:41:12.204Z] [supervisor] workers=0
+[2026-06-02T18:41:12.217Z] [bg] bg adopt: adopted=2 respawned=0 dead=0
+[2026-06-02T18:41:12.218Z] [bg] bg orphan-spare reap: 1
+[2026-06-02T18:41:12.224Z] [bg] bg spare spawned host pid=85601
+[2026-06-02T18:45:36.073Z] [bg] bg claimed-spare 6e624286 (spare)
+[2026-06-02T18:45:36.082Z] [bg] bg spare spawned host pid=86434
+[2026-06-02T18:45:36.457Z] [bg] bg settled 63335f0f (killed)
+[2026-06-02T19:46:13.743Z] [bg] bg settled 6e624286 (done)
+[2026-06-02T19:46:13.889Z] [bg] bg settled 3f9d8261 (done)
+[2026-06-02T19:46:18.891Z] [supervisor] idle 5s with no clients — exiting
+[2026-06-02T19:46:18.892Z] [supervisor] shutting down

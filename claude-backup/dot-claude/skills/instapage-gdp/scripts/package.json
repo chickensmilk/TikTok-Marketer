@@ -1,0 +1,11 @@
+{
+  "name": "instapage-gdp",
+  "version": "1.0.0",
+  "description": "Create Instapage GDP workspaces from Google Sheet",
+  "scripts": {
+    "setup": "npm install && npx playwright install chromium"
+  },
+  "dependencies": {
+    "playwright": "^1.44.0"
+  }
+}
